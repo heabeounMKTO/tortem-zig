@@ -4,6 +4,8 @@ const Ray = @import("ray.zig").Ray;
 const math = std.math;
 const print = std.io.getStdOut().writer();
 
+
+/// returns color from where da ray touches
 pub fn rayColor(r: Ray) vec.Vec3 {
     const unit_direction = r.direction / @as(vec.Vec3, @splat(math.sqrt(@reduce(.Add, r.direction * r.direction))));
     const t = 0.5 * (unit_direction[1] + 1.0);

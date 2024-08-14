@@ -16,7 +16,7 @@ pub fn main() !void {
     const focal_length = 1.0;
     const origin = p3{0.0,0.0, 0.0};
     const viewport_u = v3{viewport_width, 0.0,0.0};
-    const viewport_v = v3{0.0, viewport_height, 0.0};
+    const viewport_v = v3{0.0, -viewport_height, 0.0}; // we reverse da Y axis 
     const pixel_delta_u = viewport_u / @as(v3, @splat(@as(f64, @floatFromInt(image_width)))); 
     const pixel_delta_v = viewport_v / @as(v3, @splat(@as(f64, @floatFromInt(image_height))));
 
@@ -35,11 +35,6 @@ pub fn main() !void {
             };
             const ray_color_ehek = color.rayColor(r);
             const pixel_color = color.pointToColor(ray_color_ehek);
-            // const r: f64 = @as(f64, @floatFromInt(i)) / @as(f64, @floatFromInt(image_width - 1));
-            // const g: f64 = @as(f64, @floatFromInt(j)) / @as(f64, @floatFromInt(image_height - 1));
-            // const b: f64  = 0.6;
-            // const point = vec.Point3 {r, g, b};
-            // const pixel_color = color.pointToColor(point); 
             try print.print("{} {} {}\n", .{pixel_color[0], pixel_color[1], pixel_color[2]});
         }
     }
