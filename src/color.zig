@@ -1,15 +1,17 @@
 const std = @import("std");
 const vec = @import("vec.zig");
-const Ray = @import("ray.zig").Ray;
+const ray = @import("ray.zig");
+const Ray = ray.Ray;
 const math = std.math;
 const print = std.io.getStdOut().writer();
 
 
 /// returns color from where da ray touches
 pub fn rayColor(r: Ray) vec.Vec3 {
-    const unit_direction = r.direction / @as(vec.Vec3, @splat(math.sqrt(@reduce(.Add, r.direction * r.direction))));
+    // TODO: make this a unit_vec fucntion or something  
+    const unit_direction: vec.Vec3 = r.direction / @as(vec.Vec3, @splat(math.sqrt(@reduce(.Add, r.direction * r.direction))));
     const t = 0.5 * (unit_direction[1] + 1.0);
-    const ray_color = @as(vec.Vec3, @as(vec.Vec3, (@splat(1.0 - t)))) * vec.Vec3{1.0, 1.0, 1.0} + @as(vec.Vec3, @splat(t)) * vec.Vec3{0.5,0.7,1.0}; 
+    const ray_color = @as(vec.Vec3, @as(vec.Vec3, (@splat(1.0 - t)))) * vec.Vec3{1.0, 1.0, 1.0} + @as(vec.Vec3, @splat(t)) * vec.Vec3{0.5,0.6,1.0}; 
     return ray_color;
 }
 

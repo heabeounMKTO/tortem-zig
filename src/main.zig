@@ -33,8 +33,7 @@ pub fn main() !void {
                 .origin=origin,
                 .direction=pixel_center
             };
-            const ray_color_ehek = color.rayColor(r);
-            const pixel_color = color.pointToColor(ray_color_ehek);
+            const pixel_color = color.pointToColor(color.rayColor(r));
             try print.print("{} {} {}\n", .{pixel_color[0], pixel_color[1], pixel_color[2]});
         }
     }

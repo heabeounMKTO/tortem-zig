@@ -12,3 +12,5 @@ pub const Ray = struct {
 pub fn ray_at(ray: Ray, t: comptime_float) Point3 {
     return ray.origin + t * ray.direction;
 }
+
+
