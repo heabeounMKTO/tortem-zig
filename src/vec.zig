@@ -31,6 +31,8 @@ pub fn unit_vector_from_ray(r: ray.Ray) Vec3 {
     return r.direction / @as(Vec3, @splat(math.sqrt(@reduce(.Add, r.direction * r.direction))));
 }
 
+
+
 pub fn unit_vector(v: anytype) @TypeOf(v) {
     return v / @as(@TypeOf(v), @splat(@as(vsize(v), vlen(v))));
 }
