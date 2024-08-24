@@ -1,8 +1,10 @@
 const std = @import("std");
 const vec = @import("vec.zig");
 const ray = @import("ray.zig");
+const hitable = @import("hitable.zig");
 const Ray = ray.Ray;
 const math = std.math;
+const INFINITY = @import("utils.zig").INFINITY;
 const print = std.io.getStdOut().writer();
 
 pub fn hitSphere(center: vec.Vec3, radius: f64, r: Ray) f64 {
@@ -16,6 +18,17 @@ pub fn hitSphere(center: vec.Vec3, radius: f64, r: Ray) f64 {
     } else {
         return (h - @sqrt(discriminant)) / a;
     }
+}
+
+pub fn rayColor_(r: Ray, world: hitable.HitableList) vec.Vec3 {
+   const rec = hitable.HitRecord.init(); 
+    if (hitable.check_hit(world,r, 0, INFINITY, rec)) {
+       return vec.Vec3 { rec.normal[0] + 1.0, rec.normal[1] + 1.0, rec.normal[2] + 1.0 };   
+    }
+    const unit_direction: vec.Vec3 = vec.unit_vector_from_ray(r);
+    const a = 0.5 * (unit_direction[1] + 1.0);
+    const ray_color =  @as(vec.Vec3, (@splat(1.0 - a))) * vec.Vec3{ 1.0, 1.0, 1.0 } + @as(vec.Vec3, @splat(a)) * vec.Vec3{ 0.5, 0.6, 1.0 };
+    return ray_color;
 }
 
 /// returns color from where da ray touches
