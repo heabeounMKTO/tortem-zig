@@ -1,6 +1,7 @@
 const std = @import("std");
 const print = std.io.getStdOut().writer();
 const vec = @import("vec.zig");
+const hitable = @import("hitable.zig");
 const color = @import("color.zig");
 const ray = @import("ray.zig");
 const math = std.math;

@@ -7,23 +7,24 @@ const print = std.io.getStdOut().writer();
 
 pub fn hitSphere(center: vec.Vec3, radius: f64, r: Ray) f64 {
     const oc = center - r.origin;
-    const a = vec.dot_vector(r.direction, r.direction);
-    const b = -2.0 * vec.dot_vector(r.direction, oc);
-    const c = vec.dot_vector(oc, oc) - radius * radius;
-    const discriminant = (b * b) - (4 * a * c);
+    const a = vec.vector_length_sq(r.direction); 
+    const h = vec.dot_vector(r.direction, oc);
+    const c = vec.vector_length_sq(oc) - (radius * radius);
+    const discriminant = (h*h ) - ( a*c);
     if (discriminant < 0.0) {
         return -1.0;
     } else {
-        return (-b - @sqrt(discriminant)) / (2.0 * a);
+        return (h - @sqrt(discriminant)) / a;
     }
 }
 
 /// returns color from where da ray touches
 pub fn rayColor(r: Ray) vec.Vec3 {
     const t = hitSphere(vec.Vec3{ 0.0, 0.0, -1.0 }, 0.5, r);
-
     if (t > 0.0) {
         const n = vec.unit_vector(ray.ray_at(r, t) - vec.Vec3{ 0.0, 0.0, -1.0 });
+
+        // if i add 1 instead of 1.0 = causes precision loss (obviously)
         return vec.Vec3 { n[0] + 1.0, n[1] + 1.0, n[2] + 1.0 } * @as(vec.Vec3, @splat(0.5));
     }
     const unit_direction: vec.Vec3 = vec.unit_vector_from_ray(r);
