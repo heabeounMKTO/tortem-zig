@@ -21,9 +21,10 @@ pub fn hitSphere(center: vec.Vec3, radius: f64, r: Ray) f64 {
 }
 
 pub fn rayColor_(r: Ray, world: hitable.HitableList) vec.Vec3 {
-   const rec = hitable.HitRecord.init(); 
-    if (hitable.check_hit(world,r, 0, INFINITY, rec)) {
-       return vec.Vec3 { rec.normal[0] + 1.0, rec.normal[1] + 1.0, rec.normal[2] + 1.0 };   
+    const world_hits = hitable.check_world_hit(world, r, 0, INFINITY); 
+    if (world_hits.is_hit) {
+        const n = world_hits.normal;
+        return vec.Vec3 { n[0] + 1.0, n[1] + 1.0, n[2] + 1.0 } * @as(vec.Vec3, @splat(0.5));
     }
     const unit_direction: vec.Vec3 = vec.unit_vector_from_ray(r);
     const a = 0.5 * (unit_direction[1] + 1.0);

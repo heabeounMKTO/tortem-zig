@@ -9,29 +9,33 @@ pub const Sphere = struct {
     radius: f64,
     const Self = @This();
     
-    pub fn hit(self: *Sphere, r: Ray, ray_tmin: f64, ray_tmax: f64, record: HitRecord) bool {
+    pub fn hit(self: *Sphere, r: Ray, ray_tmin: f64, ray_tmax: f64) HitRecord {
         const oc = self.center - r.origin;
         const a = vec.vector_length_sq(r.direction); 
         const h = vec.dot_vector(r.direction, oc);
         const c = vec.vector_length_sq(oc) - (self.radius * self.radius);
         const discriminant = (h*h ) - ( a*c);
         if (discriminant < 0.0) {
-            return false;
+            return HitRecord.no_hits();
         }     
         const sqrt_discriminant = @sqrt(discriminant);
-        const root = (h - sqrt_discriminant) / a;
+        var root = (h - sqrt_discriminant) / a;
         if (root <= ray_tmin or ray_tmax <= root) {
             root = ( h + sqrt_discriminant ) / a;
             if (root <= ray_tmin or ray_tmax <= root) {
-                return false;
+                return HitRecord.no_hits();
             }
         }
-
-        record.t = root;
-        record.p = ray.ray_at(r,record.t);
-        const outward_normal = (record.p - self.center) / self.radius;
-        record.set_face_normal(r, outward_normal);
-        record.normal = (record.p - self.center) / self.radius;
-        return true;
+        const point = root; 
+        const outward_normal = (point - self.center) / self.radius;
+        const normal = (point - self.center) / self.radius;
+        const record = HitRecord {
+            .point = point,
+            .t = root,
+            .normal = normal ,
+            .front_face = HitRecord.set_face_normal(r, outward_normal),
+            .is_hit = true
+        };
+        return record;
     }
 }; 
