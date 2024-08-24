@@ -8,7 +8,7 @@ pub const Sphere = struct {
     radius: f64,
     const Self = @This();
     
-    fn hit(ray: Ray, ray_tmin: f64, ray_tmax: f64, record: HitRecord) bool {
+    fn hit(self: *Sphere, ray: Ray, ray_tmin: f64, ray_tmax: f64, record: HitRecord) bool {
         const oc = self.center - r.origin;
         const a = vec.vector_length_sq(r.direction); 
         const h = vec.dot_vector(r.direction, oc);
