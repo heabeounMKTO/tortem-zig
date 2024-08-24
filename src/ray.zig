@@ -8,6 +8,6 @@ pub const Ray = struct {
     const Self = @This();
 };
 
-pub fn ray_at(ray: Ray, t: f64) Point3 {
+pub fn ray_at(ray: Ray, t: f64) Vec3 {
     return ray.origin + @as(vec.Vec3, @splat(t)) * ray.direction;
 }
