@@ -35,25 +35,11 @@ pub fn rayColor(r: Ray, world: hitable.HitableList) vec.Vec3 {
     }
 }
 
-/// returns color from where da ray touches
-// pub fn rayColor(r: Ray) vec.Vec3 {
-//     const t = hitSphere(vec.Vec3{ 0.0, 0.0, -1.0 }, 0.5, r);
-//     if (t > 0.0) {
-//         const n = vec.unit_vector(ray.ray_at(r, t) - vec.Vec3{ 0.0, 0.0, -1.0 });
-
-//         // if i add 1 instead of 1.0 = causes precision loss (obviously)
-//         return vec.Vec3 { n[0] + 1.0, n[1] + 1.0, n[2] + 1.0 } * @as(vec.Vec3, @splat(0.5));
-//     }
-//     const unit_direction: vec.Vec3 = vec.unit_vector_from_ray(r);
-//     const a = 0.5 * (unit_direction[1] + 1.0);
-//     const ray_color =  @as(vec.Vec3, (@splat(1.0 - a))) * vec.Vec3{ 1.0, 1.0, 1.0 } + @as(vec.Vec3, @splat(a)) * vec.Vec3{ 0.5, 0.6, 1.0 };
-//     return ray_color;
-// }
-
 /// normalizes to 0 -> 255 for values from 0.0-> 1.0
 pub fn pointToColor(point: vec.Point3) vec.Color {
-    const screen_r = @as(i32, @intFromFloat(255.99 * point[0]));
-    const screen_g = @as(i32, @intFromFloat(255.99 * point[1]));
-    const screen_b = @as(i32, @intFromFloat(255.99 * point[2]));
+    const intensity = Interval { .min = 0.0, .max= 0.99 };
+    const screen_r = @as(i32, @intFromFloat(255.99 * intensity.clamp(point[0])));
+    const screen_g = @as(i32, @intFromFloat(255.99 * intensity.clamp(point[1])));
+    const screen_b = @as(i32, @intFromFloat(255.99 * intensity.clamp(point[2])));
     return vec.Color{ screen_r, screen_g, screen_b };
 }
