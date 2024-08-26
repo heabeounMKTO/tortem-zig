@@ -25,8 +25,9 @@ pub fn rayColor(r: Ray, world: hitable.HitableList) vec.Vec3 {
     const ray_interval = Interval{ .min = 0.0, .max = INFINITY };
     const world_hits = hitable.check_world_hit(world, r, ray_interval);
     if (world_hits.is_hit) {
-        const n = world_hits.normal;
-        return vec.Vec3{ n[0] + 1.0, n[1] + 1.0, n[2] + 1.0 } * @as(vec.Vec3, @splat(0.5));
+        const direction: vec.Vec3 = vec.random_on_hemisphere(world_hits.normal);
+        const _n = rayColor(Ray{ .direction = direction, .origin = r.origin }, world);
+        return vec.Vec3{ _n[0], _n[1], _n[2] } * @as(vec.Vec3, @splat(0.5));
     } else {
         const unit_direction: vec.Vec3 = vec.unit_vector_from_ray(r);
         const a = 0.5 * (unit_direction[1] + 1.0);

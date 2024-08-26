@@ -23,6 +23,7 @@ pub export fn random_f64() f64 {
     return @as(f64, @floatFromInt(c.rand())) / @as(f64, @floatFromInt(c.RAND_MAX));
 }
 
-pub fn random_range_f64(min: u32, max: u32) f64 {
-    return @as(f64, (min + (max - min))) * random_f64();
+pub fn random_range_f64(min: i32, max: i32) f64 {
+    const a = min + (max - min);
+    return @as(f64, @floatFromInt(a)) * random_f64();
 }
