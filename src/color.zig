@@ -22,7 +22,7 @@ pub fn hitSphere(center: vec.Vec3, radius: f64, r: Ray) f64 {
 }
 
 pub fn rayColor(r: Ray, world: hitable.HitableList) vec.Vec3 {
-    const ray_interval = Interval{ .min = 0.0, .max = INFINITY };
+    const ray_interval = Interval{ .min = 0.001, .max = INFINITY };
     const world_hits = hitable.check_world_hit(world, r, ray_interval);
     if (world_hits.is_hit) {
         const direction: vec.Vec3 = vec.random_on_hemisphere(world_hits.normal);

@@ -18,8 +18,10 @@ pub fn main() !void {
     const camera = Camera.init(image_width, image_height);
     var world = HitableList.create(allocator);
     defer world.deinit();
-    try world.add(Sphere{ .center = vec.Vec3{ 0.0, -100.5, -1.0 }, .radius = 100.0 });
+    // SEGFAULTS IF I SET IT TO UNDER -100 HOLY SHIT ITS NOT REAL
+    try world.add(Sphere{ .center = vec.Vec3{ 0.0, -80.0, -1.0 }, .radius = 100.0 });
     try world.add(Sphere{ .center = vec.Vec3{ 0.0, 0.0, -1.0 }, .radius = 0.45 });
+    try world.add(Sphere{ .center = vec.Vec3{ -5.0, 0.0, -12.0 }, .radius = 4.5 });
     try print.print("P3\n{} {}\n255\n", .{ camera.image_width, camera.image_height });
     try camera.render(world, 100);
 }
