@@ -3,13 +3,14 @@ const Vec3 = @import("vec.zig").Vec3;
 const Ray = @import("ray.zig").Ray;
 const ray = @import("ray.zig");
 const vec = @import("vec.zig");
+const Interval = @import("interval.zig").Interval;
 
 pub const Sphere = struct {
     center: Vec3,
     radius: f64,
     const Self = @This();
 
-    pub fn hit(self: *Sphere, r: Ray, ray_tmin: f64, ray_tmax: f64) HitRecord {
+    pub fn hit(self: *Sphere, r: Ray, ray_interval: Interval) HitRecord {
         const oc = self.center - r.origin;
         const a = vec.vector_length_sq(r.direction);
         const h = vec.dot_vector(r.direction, oc);
@@ -20,9 +21,9 @@ pub const Sphere = struct {
             return HitRecord.no_hits();
         }
         var root = (h - @sqrt(discriminant)) / a;
-        if (root <= ray_tmin or ray_tmax <= root) {
+        if (!ray_interval.surrounds(root)) {
             root = (h + @sqrt(discriminant)) / a;
-            if (root <= ray_tmin or ray_tmax <= root) {
+            if (!ray_interval.surrounds(root)) {
                 return HitRecord.no_hits();
             }
         }

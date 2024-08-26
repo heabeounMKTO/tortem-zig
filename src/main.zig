@@ -35,7 +35,8 @@ pub fn main() !void {
     var world = HitableList.create(allocator);
     defer world.deinit();
 
-    try world.add(Sphere{ .center = vec.Vec3{ 0.0, 0.0, -1.0 }, .radius = 0.75 });
+    try world.add(Sphere{ .center = vec.Vec3{ 0.0, -100.5, -1.0 }, .radius = 100.0 });
+    try world.add(Sphere{ .center = vec.Vec3{ 0.0, 0.0, -1.0 }, .radius = 0.45 });
 
     const pixel_00_loc = viewport_top_left + @as(v3, @splat(@as(f64, 0.5))) * (pixel_delta_u + pixel_delta_v);
     try print.print("P3\n{} {}\n255\n", .{ image_width, image_height });

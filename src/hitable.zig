@@ -3,6 +3,8 @@ const Ray = @import("ray.zig").Ray;
 const vec = @import("vec.zig");
 const sphere = @import("sphere.zig");
 const std = @import("std");
+const Interval = @import("interval.zig").Interval;
+
 
 // we only have spheres for now kied
 pub const HitableList = struct {
@@ -24,11 +26,11 @@ pub const HitableList = struct {
     }
 };
 
-pub fn check_world_hit(world: HitableList, r: Ray, ray_tmin: f64, ray_tmax: f64) HitRecord {
+pub fn check_world_hit(world: HitableList, r: Ray, ray_interval: Interval) HitRecord {
     var hit_rec = HitRecord.init();
-    var closest_so_far: f64 = ray_tmax;
+    var closest_so_far: f64 = ray_interval.max;
     for (world.objects.items) |*object| {
-        const hit_kor_mex = object.hit(r, ray_tmin, closest_so_far);
+        const hit_kor_mex = object.hit(r, ray_interval);
         if (hit_kor_mex.is_hit) {
             closest_so_far = hit_kor_mex.t;
             hit_rec = hit_kor_mex;

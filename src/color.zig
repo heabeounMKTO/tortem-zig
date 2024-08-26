@@ -6,6 +6,7 @@ const Ray = ray.Ray;
 const math = std.math;
 const INFINITY = @import("utils.zig").INFINITY;
 const print = std.io.getStdOut().writer();
+const Interval = @import("interval.zig").Interval;
 
 pub fn hitSphere(center: vec.Vec3, radius: f64, r: Ray) f64 {
     const oc = center - r.origin;
@@ -21,7 +22,8 @@ pub fn hitSphere(center: vec.Vec3, radius: f64, r: Ray) f64 {
 }
 
 pub fn rayColor(r: Ray, world: hitable.HitableList) vec.Vec3 {
-    const world_hits = hitable.check_world_hit(world, r, 0, INFINITY); 
+    const ray_interval = Interval { .min = 0.0, .max = INFINITY };
+    const world_hits = hitable.check_world_hit(world, r, ray_interval); 
     if (world_hits.is_hit) {
         const n = world_hits.normal;
         return vec.Vec3 { n[0] + 1.0, n[1] + 1.0 , n[2] + 1.0 } * @as(vec.Vec3, @splat(0.5));
