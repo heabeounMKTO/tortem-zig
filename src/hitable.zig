@@ -45,17 +45,13 @@ pub const HitRecord = struct {
     is_hit: bool,
     const Self = @This();
     pub fn no_hits() HitRecord {
-        return HitRecord{ .point = vec.Vec3{ 0.0, 0.0, 0.0 }, .normal = vec.Vec3{ 0.0, 0.0, 0.0 }, .t = 0.0, .front_face = false, .is_hit = false };
+        return HitRecord{ .point = vec.Vec3{ 0.0, 0.0, 0.0 }, .normal = vec.Vec3{ 0.0, 0.0, 0.0 }, .t = -1.0, .front_face = false, .is_hit = false };
     }
     pub fn init() HitRecord {
         return HitRecord{ .point = vec.Vec3{ 0.0, 0.0, 0.0 }, .normal = vec.Vec3{ 0.0, 0.0, 0.0 }, .t = 0.0, .front_face = false, .is_hit = false };
     }
     pub fn set_face_normal(self: *HitRecord, r: Ray, outward_normal: Vec3) !void {
         self.front_face = vec.dot_vector(r.direction, outward_normal) < 0.0;
-        if (self.front_face) {
-            self.normal = outward_normal;
-        } else {
-            self.normal = -outward_normal;
-        }
+        self.normal = if (self.front_face) outward_normal else -outward_normal;
     }
 };

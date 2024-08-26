@@ -35,7 +35,7 @@ pub fn main() !void {
     var world = HitableList.create(allocator);
     defer world.deinit();
 
-    try world.add(Sphere{ .center = vec.Vec3{ 0.0, 0.0, -1.0 }, .radius = 0.5 });
+    try world.add(Sphere{ .center = vec.Vec3{ 0.0, 0.0, -1.0 }, .radius = 0.75 });
 
     const pixel_00_loc = viewport_top_left + @as(v3, @splat(@as(f64, 0.5))) * (pixel_delta_u + pixel_delta_v);
     try print.print("P3\n{} {}\n255\n", .{ image_width, image_height });
@@ -45,7 +45,7 @@ pub fn main() !void {
         while (i < image_width) : (i += 1) {
             const pixel_center = pixel_00_loc + (@as(v3, @splat(@as(f64, @floatFromInt(i)))) * pixel_delta_u) + (@as(v3, @splat(@as(f64, @floatFromInt(j)))) * pixel_delta_v);
             const r: ray.Ray = ray.Ray{ .origin = origin, .direction = pixel_center };
-            const pixel_color = color.pointToColor(color.rayColor_(r, world));
+            const pixel_color = color.pointToColor(color.rayColor(r, world));
             try print.print("{} {} {}\n", .{ pixel_color[0], pixel_color[1], pixel_color[2] });
         }
     }
