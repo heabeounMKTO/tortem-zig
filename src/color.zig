@@ -30,7 +30,7 @@ pub fn rayColor(r: Ray, world: hitable.HitableList) vec.Vec3 {
     } else {
         const unit_direction: vec.Vec3 = vec.unit_vector_from_ray(r);
         const a = 0.5 * (unit_direction[1] + 1.0);
-        const ray_color =  @as(vec.Vec3, (@splat(1.0 - a))) * vec.Vec3{ 1.0, 1.0, 1.0 } + @as(vec.Vec3, @splat(a)) * vec.Vec3{ 0.5, 0.6, 1.0 };
+        const ray_color =  @as(vec.Vec3, (@splat(1.0 - a))) * vec.Vec3{ 1.0, 1.0, 1.0 } + @as(vec.Vec3, @splat(a)) * vec.Vec3{ 0.5, 0.7, 1.0 };
         return ray_color;
     }
 }

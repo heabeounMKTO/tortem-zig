@@ -9,28 +9,31 @@ const Sphere = @import("sphere.zig").Sphere;
 const math = std.math;
 const p3 = vec.Point3;
 const v3 = vec.Vec3;
+const Camera = @import("camera.zig").Camera;
 
 pub fn main() !void {
     var gpalloc = std.heap.GeneralPurposeAllocator(.{}){};
     defer _ = gpalloc.deinit();
     const allocator = gpalloc.allocator();
 
+
     const image_width: u32 = 500;
     const image_height: u32 = 250;
-    const aspect_ratio: f64 = @as(f64, image_width) / @as(f64, image_height);
-    const viewport_height = 2.0;
-    const viewport_width = aspect_ratio * viewport_height;
+    const camera = Camera.init(image_width, image_height); 
+    // const aspect_ratio: f64 = @as(f64, image_width) / @as(f64, image_height);
+    // const viewport_height = 2.0;
+    // const viewport_width = aspect_ratio * viewport_height;
 
-    const focal_length = 1.0;
-    const origin = p3{ 0.0, 0.0, 0.0 };
+    // const focal_length = 1.0;
+    // const origin = p3{ 0.0, 0.0, 0.0 };
 
-    const viewport_u = v3{ viewport_width, 0.0, 0.0 };
-    const viewport_v = v3{ 0.0, -viewport_height, 0.0 }; // we reverse da Y axis
+    // const viewport_u = v3{ viewport_width, 0.0, 0.0 };
+    // const viewport_v = v3{ 0.0, -viewport_height, 0.0 }; // we reverse da Y axis
 
-    const pixel_delta_u = viewport_u / @as(v3, @splat(@as(f64, @floatFromInt(image_width))));
-    const pixel_delta_v = viewport_v / @as(v3, @splat(@as(f64, @floatFromInt(image_height))));
+    // const pixel_delta_u = viewport_u / @as(v3, @splat(@as(f64, @floatFromInt(image_width))));
+    // const pixel_delta_v = viewport_v / @as(v3, @splat(@as(f64, @floatFromInt(image_height))));
 
-    const viewport_top_left = origin - v3{ 0.0, 0.0, focal_length } - viewport_u / @as(v3, @splat(@as(f64, 2.0))) - viewport_v / @as(v3, @splat(@as(f64, 2.0)));
+    // const viewport_top_left = origin - v3{ 0.0, 0.0, focal_length } - viewport_u / @as(v3, @splat(@as(f64, 2.0))) - viewport_v / @as(v3, @splat(@as(f64, 2.0)));
 
     var world = HitableList.create(allocator);
     defer world.deinit();
@@ -38,14 +41,15 @@ pub fn main() !void {
     try world.add(Sphere{ .center = vec.Vec3{ 0.0, -100.5, -1.0 }, .radius = 100.0 });
     try world.add(Sphere{ .center = vec.Vec3{ 0.0, 0.0, -1.0 }, .radius = 0.45 });
 
-    const pixel_00_loc = viewport_top_left + @as(v3, @splat(@as(f64, 0.5))) * (pixel_delta_u + pixel_delta_v);
-    try print.print("P3\n{} {}\n255\n", .{ image_width, image_height });
-    var j: i32 = 0;
-    while (j < image_height) : (j += 1) {
-        var i: i32 = 0;
-        while (i < image_width) : (i += 1) {
-            const pixel_center = pixel_00_loc + (@as(v3, @splat(@as(f64, @floatFromInt(i)))) * pixel_delta_u) + (@as(v3, @splat(@as(f64, @floatFromInt(j)))) * pixel_delta_v);
-            const r: ray.Ray = ray.Ray{ .origin = origin, .direction = pixel_center };
+    // const pixel_00_loc = viewport_top_left + @as(v3, @splat(@as(f64, 0.5))) * (pixel_delta_u + pixel_delta_v);
+    try print.print("P3\n{} {}\n255\n", .{ camera.image_width, camera.image_height });
+    var j: u32 = 0;
+    while (j < camera.image_height) : (j += 1) {
+        var i: u32 = 0;
+        while (i < camera.image_width) : (i += 1) {
+        const pixel_center = camera.pixel00_loc + (@as(v3, @splat(@as(f64, @floatFromInt(i)))) * camera.pixel_delta_u) + (@as(v3, @splat(@as(f64, @floatFromInt(j)))) * camera.pixel_delta_v);
+
+            const r: ray.Ray = ray.Ray{ .origin = camera.origin, .direction = pixel_center };
             const pixel_color = color.pointToColor(color.rayColor(r, world));
             try print.print("{} {} {}\n", .{ pixel_color[0], pixel_color[1], pixel_color[2] });
         }
