@@ -2,7 +2,10 @@ pub const hitable = @import("hitable.zig");
 pub const vec = @import("vec.zig");
 pub const Vec3 = @import("vec.zig").Vec3;
 pub const HitableList = @import("hitable.zig").HitableList;
-
+pub const ray = @import("ray.zig");
+pub const color = @import("color.zig");
+const std = @import("std");
+const print = std.io.getStdOut().writer();
 
 
 pub const Camera = struct {
@@ -44,7 +47,18 @@ pub const Camera = struct {
         };
     }
 
-    // pub fn render(world: HitableList) void {
-    // 
-    // }
+    pub fn render(self: @This(), world: HitableList) !void {
+        
+    var j: u32 = 0;
+    while (j < self.image_height) : (j += 1) {
+        var i: u32 = 0;
+        while (i < self.image_width) : (i += 1) {
+                
+        const pixel_center = self.pixel00_loc + (@as(Vec3, @splat(@as(f64, @floatFromInt(i)))) * self.pixel_delta_u) + (@as(Vec3, @splat(@as(f64, @floatFromInt(j)))) * self.pixel_delta_v);
+            const r: ray.Ray = ray.Ray{ .origin = self.origin, .direction = pixel_center };
+            const pixel_color = color.pointToColor(color.rayColor(r, world));
+            try print.print("{} {} {}\n", .{ pixel_color[0], pixel_color[1], pixel_color[2] });
+        }
+    }
+    }
 };
