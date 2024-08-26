@@ -69,19 +69,13 @@ pub const Camera = struct {
         while (j < self.image_height) : (j += 1) {
             var i: u32 = 0;
             while (i < self.image_width) : (i += 1) {
-
-                // const pixel_center = self.pixel00_loc + (@as(Vec3, @splat(@as(f64, @floatFromInt(i)))) * self.pixel_delta_u) + (@as(Vec3, @splat(@as(f64, @floatFromInt(j)))) * self.pixel_delta_v);
-                //     const r: ray.Ray = ray.Ray{ .origin = self.origin, .direction = pixel_center };
-                //     const pixel_color = color.pointToColor(color.rayColor(r, world));
-                //     try print.print("{} {} {}\n", .{ pixel_color[0], pixel_color[1], pixel_color[2] });
                 var sample: u32 = 0;
                 var pixel_color = Vec3{ 0.0, 0.0, 0.0 };
                 while (sample < samples_per_pixel) : (sample += 1) {
                     const r: ray.Ray = self.get_ray(i, j);
-                    pixel_color = color.rayColor(r, world);
+                    pixel_color += color.rayColor(r, world);
                 }
-                const _avg_pixelcol = pixel_color * @as(Vec3, @splat(pixel_samples_scale));
-                const final_color = color.pointToColor(_avg_pixelcol);
+                const final_color = color.pointToColor(pixel_color * @as(Vec3, @splat(pixel_samples_scale)));
                 try print.print("{} {} {}\n", .{ final_color[0], final_color[1], final_color[2] });
             }
         }
