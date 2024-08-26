@@ -64,7 +64,7 @@ pub const Camera = struct {
     }
 
     pub fn render(self: @This(), world: HitableList, samples_per_pixel: u32) !void {
-        // const pixel_samples_scale: f64 = 1.0 / @as(f64, @floatFromInt(samples_per_pixel));
+        const pixel_samples_scale: f64 = 1.0 / @as(f64, @floatFromInt(samples_per_pixel));
         var j: u32 = 0;
         while (j < self.image_height) : (j += 1) {
             var i: u32 = 0;
@@ -78,11 +78,10 @@ pub const Camera = struct {
                 var pixel_color = Vec3{ 0.0, 0.0, 0.0 };
                 while (sample < samples_per_pixel) : (sample += 1) {
                     const r: ray.Ray = self.get_ray(i, j);
-                    // pixel_color = color.pointToColor(color.rayColor(r, world) * @as(Vec3, @splat(pixel_samples_scale)));
                     pixel_color = color.rayColor(r, world);
                 }
-                // const _avg_pixelcol = pixel_color * @as(Vec3, @splat(pixel_samples_scale));
-                const final_color = color.pointToColor(pixel_color);
+                const _avg_pixelcol = pixel_color * @as(Vec3, @splat(pixel_samples_scale));
+                const final_color = color.pointToColor(_avg_pixelcol);
                 try print.print("{} {} {}\n", .{ final_color[0], final_color[1], final_color[2] });
             }
         }
