@@ -1,6 +1,7 @@
 const hitable = @import("hitable.zig");
 const vec = @import("vec.zig");
 const Vec3 = @import("vec.zig").Vec3;
+const Color = @import("vec.zig").Color;
 const HitableList = @import("hitable.zig").HitableList;
 const ray = @import("ray.zig");
 const color = @import("color.zig");
@@ -63,7 +64,7 @@ pub const Camera = struct {
     }
 
     pub fn render(self: @This(), world: HitableList, samples_per_pixel: u32) !void {
-        // const pixel_samples_scale = 1.0 / @as(f64, @floatFromInt(samples_per_pixel));
+        const pixel_samples_scale: f64 = 1.0 / @as(f64, @floatFromInt(samples_per_pixel));
         var j: u32 = 0;
         while (j < self.image_height) : (j += 1) {
             var i: u32 = 0;
@@ -74,11 +75,13 @@ pub const Camera = struct {
                 //     const pixel_color = color.pointToColor(color.rayColor(r, world));
                 //     try print.print("{} {} {}\n", .{ pixel_color[0], pixel_color[1], pixel_color[2] });
                 var sample: u32 = 0;
+                var pixel_color = Color{ 0, 0, 0 };
                 while (sample < samples_per_pixel) : (sample += 1) {
                     const r: ray.Ray = self.get_ray(i, j);
-                    const pixel_color = color.pointToColor(color.rayColor(r, world));
-                    try print.print("{} {} {}\n", .{ pixel_color[0], pixel_color[1], pixel_color[2] });
+                    pixel_color = color.pointToColor(color.rayColor(r, world) * @as(Vec3, @splat(pixel_samples_scale)));
                 }
+                // const pixel_color = color.pointToColor(color.rayColor(ray_val, world));
+                try print.print("{} {} {}\n", .{ pixel_color[0], pixel_color[1], pixel_color[2] });
             }
         }
     }

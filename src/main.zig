@@ -15,7 +15,7 @@ pub fn main() !void {
 
     const image_width: u32 = 500;
     const image_height: u32 = 250;
-    const camera = Camera.init(image_width, image_height); 
+    const camera = Camera.init(image_width, image_height);
     var world = HitableList.create(allocator);
     defer world.deinit();
     try world.add(Sphere{ .center = vec.Vec3{ 0.0, -100.5, -1.0 }, .radius = 100.0 });
