@@ -21,5 +21,5 @@ pub fn main() !void {
     try world.add(Sphere{ .center = vec.Vec3{ 0.0, -100.5, -1.0 }, .radius = 100.0 });
     try world.add(Sphere{ .center = vec.Vec3{ 0.0, 0.0, -1.0 }, .radius = 0.45 });
     try print.print("P3\n{} {}\n255\n", .{ camera.image_width, camera.image_height });
-    try camera.render(world, 10);
+    try camera.render(world, 1000);
 }
